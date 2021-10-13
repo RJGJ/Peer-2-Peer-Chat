@@ -1,0 +1,15 @@
+#chats {
+  min-height: 85vh;
+  margin-bottom: 50px;
+  display: flex;
+}
+
+.chat-block {
+  display: block;
+}
+
+.chat-block p {
+  width: fit-content;
+  max-width: 80%;
+  border-radius: 2rem !important;
+}

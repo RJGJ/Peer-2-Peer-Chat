@@ -7,15 +7,15 @@
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
-      integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
-      crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="./style.css" />
     <title>P2P Chat</title>
   </head>
   <body>
     <div class="container">
-      <div class="top-bar container">
-        <div class="container fixed-top">
+      <div class="top-bar">
+        <!-- connect to peer -->
+        <div class="sticky-top bg-white py-1">
           <h5 class="mb-3">ID: <span id="id-display"></span></h5>
           <form id="connect-to-peer" class="mb-3 input-group">
             <input
@@ -33,14 +33,12 @@
         </div>
 
         <!-- chats -->
-        <div
-          class="container fixed-bottom"
-          style="margin-bottom: 90px"
-          id="chats"
-        ></div>
+        <div class="d-flex flex-column justify-content-end" id="chats"></div>
+        <div id="focus-me"></div>
 
-        <div class="fixed-bottom border-top container py-1">
-          <div class="input-group">
+        <!-- senc chat -->
+        <div class="fixed-bottom border-top container py-1 bg-white">
+          <form class="input-group" id="send">
             <input
               type="text"
               name="message"
@@ -49,23 +47,15 @@
               class="form-control"
             />
             <div class="input-group-append">
-              <button class="btn btn-primary" id="send">Send</button>
+              <button class="btn btn-primary">Send</button>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>
 
-    <script
-      src="https://code.jquery.com/jquery-3.6.0.min.js"
-      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
-      crossorigin="anonymous"
-    ></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
     <script src="./main.js"></script>
   </body>

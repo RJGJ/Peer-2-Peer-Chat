@@ -1,36 +1,70 @@
-let peer = new Peer();
+let peer = new Peer({
+  config: {
+    iceServers: [{ url: "stun:stun.l.google.com:19302" }],
+  },
+});
 let connection = null;
 const chats = [];
 
-/* sample chat item
-{
-  sender: boolean
-  message: string
-} */
+$(document).ready(() => {
+  updateChatsUI();
 
-// initialized peer
+  window.location.href = "/#focus-me";
+});
+
+// functions
+function handleConnection(conn) {
+  connection = conn;
+  // console.log(conn);
+  conn.on("open", () => {
+    // Receive messages
+    conn.on("data", (data) => {
+      // console.log(data);
+      pushChat(data, false);
+    });
+  });
+}
+
+function pushChat(message, sender) {
+  chats.push({ sender, message });
+  updateChatsUI();
+}
+
+function updateChatsUI() {
+  $("#chats").html("");
+
+  for (item in chats) {
+    const sndr = chats[item].sender;
+    const msg = chats[item].message;
+
+    let chatElement = $('<div class="chat-block"></div>');
+    let chatTextElement = $('<p class="py-2 px-3 rounded"></p>');
+
+    if (sndr) {
+      chatTextElement.addClass("bg-light text-dark ml-auto border");
+    } else {
+      chatTextElement.addClass("bg-dark text-light mr-auto");
+    }
+
+    chatTextElement.text(msg);
+
+    chatElement.append(chatTextElement);
+    $("#chats").append(chatElement);
+  }
+}
+
+// peer
 peer.on("open", (id) => {
   // console.log(id);
   $("#id-display").text(peer.id);
 });
 
-function handleConnection(conn) {
-  connection = conn;
-  console.log(conn);
-  conn.on("open", () => {
-    // Receive messages
-    conn.on("data", (data) => {
-      console.log(data);
-      updateChats(data, false);
-    });
-  });
-}
-
 peer.on("connection", (conn) => {
-  console.log(conn);
+  // console.log(conn);
   handleConnection(conn);
 });
 
+// ui triggers
 $("#connect-to-peer").submit((ev) => {
   ev.preventDefault();
   const peerId = $("#peer-id").val();
@@ -38,37 +72,14 @@ $("#connect-to-peer").submit((ev) => {
   handleConnection(conn);
 });
 
-function updateChats(message, sender) {
-  chats.push({ sender, message });
-
-  // clear content
-  $("#chats").html("");
-
-  for (item in chats) {
-    const sndr = chats[item].sender;
-    const msg = chats[item].message;
-
-    $("#chats").append(`
-      <div class="row">
-        <div class="col d-block">
-          <p class="p-3 me-auto bg-${
-            sndr ? "dark" : "primary"
-          } text-light rounded" style="margin-${
-      sndr ? "left" : "right"
-    }: 70px">${msg}</p>
-        </div>
-      </div>
-    `);
-  }
-}
-
-$("#send").click(() => {
+$("#send").submit((ev) => {
+  ev.preventDefault();
   const message = $("#message").val();
 
   if (!message) return;
 
   connection.send(message);
   // Send messages
-  updateChats(message, true);
+  pushChat(message, true);
   $("#message").val("");
 });
